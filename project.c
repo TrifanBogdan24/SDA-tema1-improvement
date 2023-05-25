@@ -1,12 +1,17 @@
 /*TRIFAN BOGDAN-CRISTIAN , 312CD*/
+/*PROIECT PCLP 3*/
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
-#include "tema-1.h"
 
+#include "macrouri.h"
+#include "byte_string.h"
+#include "coada.h"
+#include "stiva.h"
+#include "banda.h"
 
+#define SIR_IN_SIR(sir1, sir2) (byteop_strstr(sir1, sir2) != NULL ? 1 : 0)
 
-
+// void do_what_line_says(FILE *fout, char *linie, LBanda)
 
 int main()
 {
@@ -15,7 +20,6 @@ int main()
     SStiva undo_stiva = (SStiva) calloc(1, sizeof(NodStiva));               // retine numele functiei
     SStiva redo_stiva = (SStiva) calloc(1, sizeof(NodStiva));              // retine numele functiei
     LBanda* banda_merge = CreareBanda();   // retine banda 
-
 
     FILE *fin = fopen("tema1.in" , "r");
     FILE *fout= fopen("tema1.out" , "w");
@@ -38,51 +42,52 @@ int main()
 
     char  *linie = (char *)malloc(LUNGIME_LINII * sizeof(char));
     // printf("%s = %d" , linie , nr );
-    int i = ZERO;
-    for (i = ZERO ; i <= nr ; i++) {
+    
+    for (int i = ZERO ; i <= nr ; i++) {
         // fscanf(fin , "%s" , linie);
         
         fgets(linie, LUNGIME_LINII , fin);
         // printf("%s\n" ,linie);
+        // do_what_line_say();
 
-        if (strstr(linie , UPDATE_MV_R_C) != NULL) {
+        if (SIR_IN_SIR(linie , UPDATE_MV_R_C)) {
             
             CoadaInserareFinal(coada_execute_update , linie);
             //printf("MOVE RIGTH CHAR\n");
              
-        } else if (strstr(linie ,  UPDATE_MV_L_C) != NULL) {
+        } else if (SIR_IN_SIR(linie ,  UPDATE_MV_L_C)) {
             
             CoadaInserareFinal(coada_execute_update , linie);
             // printf("MOVE LEFT CHAR\n");
              
-        } else if (strstr(linie , UPDATE_MV_R) != NULL) {
+        } else if (SIR_IN_SIR(linie , UPDATE_MV_R)) {
             
             CoadaInserareFinal(coada_execute_update , linie);
             // printf("MOVE RIGTH\n");
              
-        } else if (strstr(linie , UPDATE_MV_L) != NULL) {
+        } else if (SIR_IN_SIR(linie , UPDATE_MV_L)) {
            
             CoadaInserareFinal(coada_execute_update , linie);
             // printf("MOVE LEFT\n");
              
-        } else if (strstr(linie , UPDATE_INSERT_L_C) != NULL) {
+        } else if (SIR_IN_SIR(linie , UPDATE_INSERT_L_C)) {
             
             CoadaInserareFinal(coada_execute_update , linie);
             // printf("%s\n" , linie);
              
-        } else if (strstr(linie , UPDATE_INSERT_R_C) != NULL) {
+        } else if (SIR_IN_SIR(linie , UPDATE_INSERT_R_C)) {
             
             CoadaInserareFinal(coada_execute_update , linie);
              
-        } else if (strstr(linie , SHOW_CURRENT) != NULL) {
+        } else if (SIR_IN_SIR(linie , SHOW_CURRENT)) {
             
             fprintf(fout , "%c\n" , banda_merge->deget->caracter);
              
-        } else if (strstr(linie , SHOW_ALL) != NULL) {
+        } else if (SIR_IN_SIR(linie , SHOW_ALL)) {
 
             display(fout , banda_merge );
              
-        } else if (strstr(linie , UNDO) != NULL ) {
+        } else if (SIR_IN_SIR(linie , UNDO)) {
             
             if( undo_stiva != NULL && undo_stiva->informatie != NULL) {
                 StivaPush(&redo_stiva , banda_merge->deget); // punem in varful stivei REDO varful lui UNDO
@@ -90,7 +95,7 @@ int main()
                 StivaPop(&undo_stiva);  // stergem varful stivei UNDO
             }
 
-        } else if (strstr(linie , REDO) != NULL ) {
+        } else if (SIR_IN_SIR(linie , REDO)) {
             
             if (redo_stiva != NULL && redo_stiva->informatie != NULL) {
                 StivaPush(&undo_stiva , banda_merge->deget);     // punem in varful stivei UNDO varful lui REDO
@@ -98,22 +103,22 @@ int main()
                 StivaPop(&redo_stiva);  // stergem varful stivei REDO
             }
 
-        } else if( strstr(linie , UPDATE_WRITE_C) != NULL) {
+        } else if (SIR_IN_SIR(linie , UPDATE_WRITE_C)) {
             
             CoadaInserareFinal( coada_execute_update , linie);
             // printf("%s\n" , coada_execute_update->final->informatie );
             //show(coada_execute_update, fout);
              
-        } else if (strstr(linie , EXECUTE) != NULL) {
+        } else if (SIR_IN_SIR(linie , EXECUTE)) {
             
             // executia efectiva a operatiilor memorate
             if (coada_execute_update->inceput != NULL) {
                 
-                char cmd_to_exec[LUNGIME_LINII] ;
-                strcpy(cmd_to_exec , coada_execute_update->inceput->informatie);
+                char *cmd_to_exec = (char *)malloc(LUNGIME_LINII * sizeof(char));
+                byteop_strcpy(cmd_to_exec , coada_execute_update->inceput->informatie);
                 CoadaDeleteFirstNode(coada_execute_update);
 
-                if (strstr(cmd_to_exec , UPDATE_WRITE_C) != NULL) {
+                if (byteop_strstr(cmd_to_exec , UPDATE_WRITE_C) != NULL) {
                     
                     // modificam santinela
                     banda_merge->deget->caracter = cmd_to_exec[POZ_WRITE_C];
@@ -126,8 +131,8 @@ int main()
                        StivaPop(&redo_stiva);
                     }
                     // printf("%s" , banda_merge->inceput->informatie);
-                     
-                } else if (strstr(cmd_to_exec , UPDATE_MV_L_C) != NULL) {
+                    
+                } else if (SIR_IN_SIR(cmd_to_exec , UPDATE_MV_L_C)) {
                     
                     // cautam caracterul in stanga degetului
                     // printf("good\n");
@@ -143,13 +148,14 @@ int main()
                     }
                     
                     if (aux==NULL) {
-                        // afisam eroarea 
+                        // afisam eroarea
                         free(aux);
-                        fprintf(fout, "%s\n" , EROARE);
+                        StringPrintFile(fout, EROARE);
+                        StringPrintFile(fout, "\n");
                     }
                    
 
-                } else if (strstr(cmd_to_exec, UPDATE_MV_R_C) != NULL) {
+                } else if (SIR_IN_SIR(cmd_to_exec, UPDATE_MV_R_C)) {
 
                     // printf("Cautam in dreapta %s\n", caracter);
                     while (banda_merge->deget != NULL && banda_merge->deget->caracter != cmd_to_exec[POZ_MV_R_C]) {
@@ -160,17 +166,17 @@ int main()
                         banda_merge->deget = banda_merge->final;
                          
                     } 
-                } else if (strstr(cmd_to_exec , UPDATE_INSERT_L_C) != NULL) {
+                } else if (SIR_IN_SIR(cmd_to_exec , UPDATE_INSERT_L_C)) {
                    
                     // inserarea unui caracter la stanga si modificarea santinelei
                     BandaInserareStanga(fout , banda_merge , cmd_to_exec[POZ_INSERT_L_C]);
                      
-                } else if (strstr(cmd_to_exec , UPDATE_INSERT_R_C) != NULL) {
+                } else if (SIR_IN_SIR(cmd_to_exec , UPDATE_INSERT_R_C)) {
                     
                     // inserarea unui caracter in dreapta santinelei si modificarea santinelei
                     BandaInserareDreapta(banda_merge , cmd_to_exec[POZ_INSERT_R_C]);
                      
-                } else if (strstr(cmd_to_exec , UPDATE_MV_L) != NULL) {
+                } else if (SIR_IN_SIR(cmd_to_exec , UPDATE_MV_L)) {
                     
                     // mutam degetul in stanga
                     if (banda_merge->deget != banda_merge->inceput) {
@@ -180,7 +186,7 @@ int main()
                         
                     }
                     
-                } else if (strstr(cmd_to_exec , UPDATE_MV_R) != NULL) {
+                } else if (SIR_IN_SIR(cmd_to_exec , UPDATE_MV_R)) {
                     
                     StivaPush(&undo_stiva , banda_merge->deget);
 
@@ -194,8 +200,9 @@ int main()
                     }
                      
                 }
-                
-            } // altminteri nu avem ce execyta
+
+                free(cmd_to_exec);
+            } // altminteri nu avem ce executa
         
         }
      
@@ -220,3 +227,5 @@ int main()
     fclose(fout);
     return 0;
 }
+
+#undef SIR_IN_SIR
