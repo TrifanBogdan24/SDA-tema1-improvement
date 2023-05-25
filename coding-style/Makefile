@@ -26,6 +26,6 @@ valgrind:
 	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes ./$(EXC) $< $(filter-out $@,$(MAKECMDGOALS))
 
 archive:
-	rm -r coding_style.zip
-	zip -r *.c *.h README.md README Makefile
+	rm -rf coding_style.zip
+	zip -r coding_style.zip *.c *.h README.md README Makefile
 
