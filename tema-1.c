@@ -36,7 +36,7 @@ int main()
 
 
 
-    char  linie[LUNGIME_LINII];
+    char  *linie = (char *)malloc(LUNGIME_LINII * sizeof(char));
     // printf("%s = %d" , linie , nr );
     int i = ZERO;
     for (i = ZERO ; i <= nr ; i++) {
@@ -215,6 +215,7 @@ int main()
     free(redo_stiva);
     //DeleteStiva(&undo_stiva);
     //DeleteStiva(&redo_stiva);
+    free(linie);
     fclose(fin);
     fclose(fout);
     return 0;
