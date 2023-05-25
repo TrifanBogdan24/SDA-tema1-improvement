@@ -3,7 +3,7 @@
 #ifndef _BYTE_STRING_H_
 #define _BYTE_STRING_H_
 
-#include <stdio.h>
+int byteop_strlen(char *sir);
 
 void StringPrintFile(FILE *fout, char* str);
 

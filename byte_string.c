@@ -2,6 +2,15 @@
 /* PROIECT PCLP 3 */
 #include <stdio.h>
 #include "byte_string.h"
+#include "macrouri.h"
+
+int byteop_strlen(char *sir)
+{
+    char* ptr = sir;
+    while (*ptr)
+        ++ptr;
+    return ptr - sir;
+}
 
 void StringPrintFile(FILE *fout, char* str)
 {

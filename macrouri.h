@@ -22,8 +22,12 @@
 #define POZ_MV_R_C 16
 #define POZ_INSERT_L_C 12
 #define POZ_INSERT_R_C 13
-#define UNU 1
 #define ZERO 0
+#define UNU 1
+#define DOI 2
 #define ZRC '0'
+#define OPT_ZECI 80
+#define MAX_COL 1000
+#define MAX_LIN 100000
 
 #endif

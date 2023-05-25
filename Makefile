@@ -38,5 +38,9 @@ archive:
 valgrind:
 	valgrind --leak-check=yes --track-origins=yes ./tema1
 
+coding_style:
+	cd coding-style/ ; ./coding_style ../*.c ../*.h ; cd ../
+
 check:
 	./checker.sh
+

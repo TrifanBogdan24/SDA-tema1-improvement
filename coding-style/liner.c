@@ -21,6 +21,12 @@ int blank_line(char *sir)
 
 int multiple_blank_lines(char const *f_name, char **txt, int nr_lines, int i, int *error)
 {
+    if (i >= nr_lines)
+        return i;
+
+    if (!txt[i])
+        return i;
+
     int j = i;
     // int lungime = byteop_strlen(txt[j]);
     while (j < nr_lines && blank_line(txt[j]))
@@ -193,10 +199,10 @@ int for_declaration(char **txt, int nr_line, int lin)
 int is_some_cmd_in_right(char **txt, int nr_lines, int lin, int col)
 {   
     if (lin >= nr_lines)
-        return;
+        return lin;
 
     if (!txt[lin])
-        return;
+        return lin;
 
     int lungime = byteop_strlen(txt[lin]);
     

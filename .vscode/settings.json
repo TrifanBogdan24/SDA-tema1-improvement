@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "byte_string.h": "c",
+        "macrouri.h": "c"
+    }
+}
