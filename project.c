@@ -1,5 +1,5 @@
-/*TRIFAN BOGDAN-CRISTIAN , 312CD*/
-/*PROIECT PCLP 3*/
+/* TRIFAN BOGDAN-CRISTIAN , 312CD */
+/* PROIECT PCLP 3 */
 #include <stdio.h>
 #include <stdlib.h>
 

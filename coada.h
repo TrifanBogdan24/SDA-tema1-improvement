@@ -1,3 +1,5 @@
+/* TRIFAN BOGDAN-CRISTIAN , 312CD */
+/* PROIECT PCLP 3 */
 #ifndef _COADA_H_
 #define _COADA_H_
 

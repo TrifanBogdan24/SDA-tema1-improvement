@@ -1,3 +1,5 @@
+/* TRIFAN BOGDAN-CRISTIAN , 312CD */
+/* PROIECT PCLP 3 */
 #ifndef _STIVA_H_
 #define _STIVA_H_
 
