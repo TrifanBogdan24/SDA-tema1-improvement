@@ -20,13 +20,15 @@ void file_opener(char const *name_of_file)
     printf("Checking file %s\n", name_of_file);
     FILE *fin = fopen(name_of_file, "rt");
     if (!fin) {
+        fclose(fin);
         printf("\033[0mEroare la deschiderea fisierului.\033[0m\n");
         return;
     }
 
     char *name = (char *)name_of_file;
     if (!is_c_file(name)) {
-            printf("\033[0mFisierul %s nu este fisier C!\033[0m\n", name_of_file);
+        fclose(fin);
+        printf("\033[0mFisierul %s nu este fisier C!\033[0m\n", name_of_file);
         return;
     }
 
