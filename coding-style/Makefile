@@ -28,4 +28,3 @@ valgrind:
 archive:
 	rm -rf coding_style.zip
 	zip -r coding_style.zip *.c *.h README.md README Makefile
-

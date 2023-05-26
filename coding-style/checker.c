@@ -7,12 +7,26 @@
 #include "../byte_string.h"
 #include "liner.h"
 
+int is_c_file(char *name_of_file)
+{
+    if (!byteop_strstr(name_of_file, ".c") && !byteop_strstr(name_of_file, ".h"))
+        return ZERO;
+
+    return UNU;
+}
+
 void file_opener(char const *name_of_file)
 {
     printf("Checking file %s\n", name_of_file);
     FILE *fin = fopen(name_of_file, "rt");
     if (!fin) {
-        printf("Eroare la deschiderea fisierului");
+        printf("\033[0mEroare la deschiderea fisierului.\033[0m\n");
+        return;
+    }
+
+    char *name = (char *)name_of_file;
+    if (!is_c_file(name)) {
+            printf("\033[0mFisierul %s nu este fisier C!\033[0m\n", name_of_file);
         return;
     }
 
@@ -28,8 +42,8 @@ void file_opener(char const *name_of_file)
         fgets(txt[nr_lines], MAX_COL, fin);
         nr_lines++;
         if (nr_lines == MAX_LIN) {
-            printf("Fisierul are prea multe linii pentru ca checkerul");
-            printf(" sa le verifice pe toate.\n");
+            printf("\033[0mFisierul are prea multe linii pentru ca checkerul");
+            printf("\033[0m sa le verifice pe toate.\033[0m\n");
             break;
         }
     }
@@ -57,17 +71,17 @@ void file_opener(char const *name_of_file)
     }
 
     if (byteop_strlen(txt[nr_lines - UNU])) {
-        printf("%s : ERROR : ", name_of_file);
-        printf("expected new-line character at the end of the file.\n"); 
+        printf("\033[31m%s : ERROR : \033[0m", name_of_file);
+        printf("\033[31mexpected new-line character at the end of the file.\033[0m\n"); 
         mistakes++;
     }
 
     if (!mistakes) {
-        printf("%s : seems ok, ", name_of_file);
-        printf("but should also be checked manually. Good luck\n");
+        printf("\033[32%s : seems ok, \033[0m", name_of_file);
+        printf("\033[32but should also be checked manually. Good luck!\033[0m\n");
     } else {
-        printf("In the file %s have been identified", name_of_file);
-        printf(" %d coding style errors.\n\n", mistakes);
+        printf("\033[33mIn the file %s have been identified\033[0m", name_of_file);
+        printf("\033[33m %d coding style errors.\033[0m\n\n", mistakes);
     }
 
     for (int i = ZERO; i < MAX_LIN; i++)

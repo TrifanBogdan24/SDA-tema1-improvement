@@ -4,7 +4,6 @@ CC = gcc
 CFLAGS = -Wall -g
 EXC = tema1
 
-
 build: project
 
 project: project.o  byte_string.o coada.o stiva.o  banda.o
@@ -34,6 +33,9 @@ clean:
 archive:
 	rm -rf *.zip
 	zip -r project.zip Makefile README *.c *.h
+
+zipper:
+	cd ../; rm -rf SDA-tema1-optimisation.zip ; zip -r SDA-tema1-optimisation.zip SDA-tema1-optimisation/* ; cd ../
 
 valgrind:
 	valgrind --leak-check=yes --track-origins=yes ./tema1

@@ -34,8 +34,8 @@ int multiple_blank_lines(char const *f_name, char **txt, int nr_lines, int i, in
 
 
     if (j > i + UNU) {
-        printf("%s : ERROR : ", f_name);
-        printf("multiple blank-lines from %d to %d\n", i + UNU, j);
+        printf("\033[31m%s : ERROR : \033[0m", f_name);
+        printf("\033[31mmultiple blank-lines from %d to %d.\033[0m\n", i + UNU, j);
         (*error)++;
     }
     return j;
@@ -51,9 +51,9 @@ void long_line(char const *f_name, char **txt, int nr_lines, int lin, int *error
 
     int lungime = byteop_strlen(txt[lin]);
     if (lungime > OPT_ZECI) {
-        printf("%s : ERROR : ", f_name);
-        printf("line %d : has a length of %d, ", lin + UNU, lungime);
-        printf("bigger than %d.\n", OPT_ZECI);
+        printf("\033[31m%s : ERROR : \033[0m", f_name);
+        printf("\033[31mline %d : has a length of %d, \033[0m", lin + UNU, lungime);
+        printf("\033[31mbbigger than %d.\033[0m\n", OPT_ZECI);
         (*error)++;
     }
 }
@@ -74,16 +74,16 @@ void comma(char const *f_name, char **txt, int nr_lines, int lin, int *error)
 
         if (txt[lin][i] == ',' && good) {
             if (i > ZERO && CHAR_EGAL(txt[lin][i - UNU], ' ')) {
-                printf("%s : ERROR : ", f_name);
-                printf("line %d, column %i :", lin + UNU, i + UNU);
-                printf(" there should be no space(s) before a comma ','.\n");
+                printf("\033[31m%s : ERROR : \033[0m", f_name);
+                printf("\033[31mline %d, column %i :\033[0m", lin + UNU, i + UNU);
+                printf("\033[31m there should be no space(s) before a comma ','.\033[0m\n");
                 (*error)++;
             } 
 
             if (i < lungime - UNU && !CHAR_EGAL(txt[lin][i + UNU] ,' ')) {
-                printf("%s : ERROR : ", f_name);
-                printf("line %d, column %i :", lin + UNU, i + DOI);
-                printf(" expected a space ' ' after a comma ','.\n");
+                printf("\033[31m%s : ERROR : ", f_name);
+                printf("\033[31mline %d, column %i :", lin + UNU, i + DOI);
+                printf("\033[31m expected a space ' ' after a comma ','.\033[0m\n");
                 (*error)++;
             }
 
@@ -92,9 +92,9 @@ void comma(char const *f_name, char **txt, int nr_lines, int lin, int *error)
                 j++;
 
             if (j > i + DOI) {
-                printf("%s : ERROR : ", f_name);
-                printf("line %d, column %d :", lin + UNU, i + UNU);
-                printf(" too many spaces after the comma.\n");
+                printf("\033[31m%s : ERROR : \033[0m", f_name);
+                printf("\033[31mline %d, column %d :\033[0m", lin + UNU, i + UNU);
+                printf("\033[31m too many spaces after the comma.\033[0m\n");
                 (*error)++;
             }
         }
@@ -112,9 +112,9 @@ void trailing_whitespace(char const *f_name, char **txt, int nr_lines, int lin, 
     int lungime = byteop_strlen(txt[lin]);
     if (lungime - UNU > ZERO && CHAR_EGAL(txt[lin][lungime- DOI], ' ')) {
         // daca col = 0, atunci blank line, care este deja verificat
-        printf("%s : ERROR : ", f_name);
-        printf("line %d : trailing whitespaces", lin + UNU);
-        printf(" at the end of the line.\n");
+        printf("\033[31m%s : ERROR : \033[0m", f_name);
+        printf("\033[31mline %d : trailing whitespaces\033[0m", lin + UNU);
+        printf("\033[31m at the end of the line.\033[0m\n");
         (*error)++;
     }
 }
@@ -131,14 +131,14 @@ void space_bracket(char const *f_name, char **txt, int nr_lines, int lin, int *e
     int good = UNU; // nu o sa facem verificari intre ghilimele si comentarii
 
     if (byteop_strstr(txt[lin], "{") && byteop_strstr(txt[lin], "}")) {
-        printf("%s : ERROR : ", f_name);
-        printf(" line %d : is not a good practice ", lin + UNU);
-        printf("to have two braces one the same line '{...}.'.\n");
+        printf("\033[31m%s : ERROR : \033[0m", f_name);
+        printf("\033[31m line %d : is not a good practice \033[0m", lin + UNU);
+        printf("\033[31mto have two braces one the same line '{...}.'.\033[0m\n");
         (*error)++;
     }
 
     for (int i = ZERO; i < lungime; i++) {
-        if (txt[lin][i] == '"')
+        if (CHAR_EGAL(txt[lin][i], '"'))
             good = UNU - good;
 
         if (CHAR_EGAL(txt[lin][i], '/') && i <= lungime - DOI && 
@@ -150,36 +150,36 @@ void space_bracket(char const *f_name, char **txt, int nr_lines, int lin, int *e
 
         if (CHAR_EGAL(txt[lin][i], '(') && i < lungime
             && CHAR_EGAL(txt[lin][i + UNU], ' ')) {
-            printf("%s : ERROR : ", f_name);
-            printf("line %d, column %d :", lin + UNU, i + UNU);
-            printf(" unneccesary space(s) after round bracket '('.\n");
+            printf("\033[31m%s : ERROR : \033[0m", f_name);
+            printf("\033[31mline %d, column %d :\033[0m", lin + UNU, i + UNU);
+            printf("\033[31m unneccesary space(s) after round bracket '('.\033[0m\n");
             (*error)++;
             continue;
         }
 
         if (CHAR_EGAL(txt[lin][i], '[') && i < lungime
             && CHAR_EGAL(txt[lin][i + UNU], ' ')) {
-            printf("%s : ERROR : ", f_name);
-            printf("line %d, column %d :", lin + UNU, i + UNU);
-            printf(" unneccesary space(s) after square bracket '['.\n");
+            printf("\033[31m%s : ERROR : \033[0m", f_name);
+            printf("\033[31mline %d, column %d :\033[0m", lin + UNU, i + UNU);
+            printf("\033[31m unneccesary space(s) after square bracket '['.\033[0m\n");
             (*error)++;
             continue;
         }
 
         if (CHAR_EGAL(txt[lin][i], ')') && i > ZERO &&
             CHAR_EGAL(txt[lin][i - UNU], ' ') && byteop_strstr(txt[lin], "{")) {
-            printf("%s : ERROR : ", f_name);
-            printf("line %d, column %d :", lin + UNU, i + UNU);
-            printf(" unneccesary space(s) before round bracket ')'.\n");
+            printf("\033[31m%s : ERROR : \033[0m", f_name);
+            printf("\033[31mline %d, column %d :\033[0m", lin + UNU, i + UNU);
+            printf("\033[31m unneccesary space(s) before round bracket ')'.\033[0m\n");
             (*error)++;
             continue;
         }
 
         if (txt[lin][i] == ']' && i > ZERO && txt[lin][i - UNU] == ' ' &&
             byteop_strstr(txt[lin], "{")) {
-            printf("%s : ERROR : ", f_name);
-            printf("line %d, column %d :", lin + UNU, i + UNU);
-            printf(" unneccesary space(s) before square bracket ']'.\n");
+            printf("\033[31m%s : ERROR : \033[0m", f_name);
+            printf("\033[31mline %d, column %d :\033[0m", lin + UNU, i + UNU);
+            printf("\033[31m unneccesary space(s) before square bracket ']'.\033[0m\n");
             (*error)++;
             continue;
         }
@@ -231,9 +231,9 @@ void punct_si_virgula(char const *f_name, char **txt, int nr_lines, int lin, int
             continue;
 
         if (i > ZERO && CHAR_EGAL(txt[lin][i - UNU], ' ')) {
-            printf("%s : ERROR :", f_name);
-            printf("line %d, column %d : ", lin + UNU, i + UNU);
-            printf(" unneccesary space(s) before ';'.\n");
+            printf("\033[31m%s : ERROR : \033[0m", f_name);
+            printf("\033[31mline %d, column %d : \033[0m", lin + UNU, i + UNU);
+            printf("\033[31m unneccesary space(s) before ';'.\033[0m\n");
             (*error)++;
         }
 
@@ -262,17 +262,17 @@ void verify_for(char const *f_name, char **txt, int nr_lines, int lin, int *erro
 
     p += byteop_strlen("for");
     if (*p != ' ') {
-        printf("%s : ERROR : ", f_name);
-        printf("line %d : there should be a space ", lin + UNU);
-        printf("between 'for' and paranthesis '('.\n");
+        printf("\033[31m%s : ERROR : \033[0m", f_name);
+        printf("\033[31mline %d : there should be a space \033[0m", lin + UNU);
+        printf("\033[31mbetween 'for' and paranthesis '('.\033[0m\n");
         (*error)++;
     }
 
     p += UNU;
     if (*p && *p == ' ') {
-        printf("%s : ERROR : ", f_name);
-        printf("line %d : too many spaces ", lin + UNU);
-        printf("between 'for' and paranthesis '('.\n");
+        printf("\033[31m%s : ERROR : \033[0m", f_name);
+        printf("\033[31mline %d : too many spaces \033[0m", lin + UNU);
+        printf("\033[31mbetween 'for' and paranthesis '('.\033[0m\n");
         (*error)++;
     }
 
@@ -292,17 +292,17 @@ void verify_if(char const *f_name, char **txt, int nr_lines, int lin, int *error
 
     p += byteop_strlen("if");
     if (*p && *p != ' ') {
-        printf("%s : ERROR : ", f_name);
-        printf("line %d : there should be a space ", lin + UNU);
-        printf("between 'if' and paranthesis '('.\n");
+        printf("\033[31m%s : ERROR : \033[0m", f_name);
+        printf("\033[31mline %d : there should be a space \033[0m", lin + UNU);
+        printf("\033[31mbetween 'if' and paranthesis '('.\033[0m\n");
         (*error)++;
     }
 
     p += UNU;
     if (*p == ' ') {
-        printf("%s : ERROR : ", f_name);
-        printf("line %d : too many spaces ", lin + UNU);
-        printf("between 'if' and paranthesis '('.\n");
+        printf("\033[31m%s : ERROR : \033[0m", f_name);
+        printf("\033[31mline %d : too many spaces \033[0m", lin + UNU);
+        printf("\033[31mbetween 'if' and paranthesis '('\033[0m.\n");
         (*error)++;
     }
 
@@ -325,17 +325,17 @@ void verify_while_simplu(char const *f_name, char **txt, int nr_lines, int lin, 
 
     p += byteop_strlen("while");
     if (*p && *p != ' ') {
-        printf("%s : ERROR : ", f_name);
-        printf("line %d : there should be a space ", lin + UNU);
-        printf("between 'while' and paranthesis '('.\n");
+        printf("\033[31m%s : ERROR : \033[0m", f_name);
+        printf("\033[31mline %d : there should be a space \033[0m", lin + UNU);
+        printf("\033[31mbetween 'while' and paranthesis '('.\033[0m\n");
         (*error)++;
     }
 
     p += UNU;
     if (*p == ' ') {
-        printf("%s : ERROR : ", f_name);
-        printf("line %d : too many spaces ", lin + UNU);
-        printf("between 'while' and paranthesis '('.\n");
+        printf("\033[31m%s : ERROR : \033[0m", f_name);
+        printf("\033[31mline %d : too many spaces \033[0m", lin + UNU);
+        printf("\033[31mbetween 'while' and paranthesis '('.\033[0m\n");
         (*error)++;
     }
 
@@ -355,24 +355,24 @@ void verify_do_from_do_while(char const *f_name, char **txt, int nr_lines, int l
     p += byteop_strlen("do");
 
     if (!byteop_strstr(txt[lin], "{")) {
-        printf("%s : ERROR : ", f_name);
-        printf("line %d : bracket '{' should ", lin + UNU);
-        printf("be on the same line with 'while'.\n");
+        printf("\033[31m%s : ERROR : \033[0m", f_name);
+        printf("\033[31mline %d : bracket '{' should \033[0m", lin + UNU);
+        printf("\033[31mbe on the same line with 'while'.\033[0m\n");
         (*error)++;
     }
 
     if (*p && *p != ' ') {
-        printf("%s : ERROR : ", f_name);
-        printf("line %d : there should be a space ", lin + UNU);
-        printf("between 'do' and bracket '{'.\n");
+        printf("\033[31m%s : ERROR : \033[0m", f_name);
+        printf("\033[31mline %d : there should be a space \033[0m", lin + UNU);
+        printf("\033[31mbetween 'do' and bracket '{'.\033[0m\n");
         (*error)++;
     }
 
     p += UNU;
     if (*p == ' ') {
-        printf("%s : ERROR : ", f_name);
-        printf("line %d : too many spaces ", lin + UNU);
-        printf("between 'while' and bracket '{'.\n");
+        printf("\033[31m%s : ERROR : \033[0m", f_name);
+        printf("\033[31mline %d : too many spaces \033[0m", lin + UNU);
+        printf("\033[31mbetween 'while' and bracket '{'.\033[0m\n");
         (*error)++;
     }
 }
@@ -386,10 +386,10 @@ void non_equal_zero(char const *f_name, char **txt, int nr_lines, int lin, int *
         return;
 
     if (byteop_strstr(txt[lin], "!= 0") || byteop_strstr(txt[lin], "!=0")) {
-        printf("%s : ERROR : ", f_name);
-        printf("line %d : verification with 0 ", lin + UNU);
-        printf("can be eliminated. Keep only the expresion and the ");
-        printf("compiler will check if it's a non-zero value.\n");
+        printf("\033[32m%s : ERROR : \033[0m", f_name);
+        printf("\033[32mline %d : verification with 0 ", lin + UNU);
+        printf("\033[32mcan be eliminated. Keep only the expresion and the \033[0m");
+        printf("\033[32mcompiler will check if it's a non-zero value.\033[0m\n");
         (*error)++;
     }
 }
@@ -403,10 +403,10 @@ void equal_zero(char const *f_name, char **txt, int nr_lines, int lin, int *erro
         return;
 
     if (byteop_strstr(txt[lin], "== 0") || byteop_strstr(txt[lin], "==0")) {
-        printf("%s : ERROR : ", f_name);
-        printf("line %d : verification with 0 ", lin + UNU);
-        printf("can be eliminated. Keep only the expresion, with a '!' in front");
-        printf(", and the compiler will check if it's zero.\n");
+        printf("\033[32m%s : ERROR : \033[0m", f_name);
+        printf("\033[32mline %d : verification with 0 \033[0m", lin + UNU);
+        printf("\033[32mcan be eliminated. Keep only the expresion, with a '!' in front\033[0m");
+        printf("\033[32m, and the compiler will check if it's zero.\033[0m\n");
         (*error)++;
     }
 }
@@ -420,10 +420,10 @@ void non_equal_null(char const *f_name, char **txt, int nr_lines, int lin, int *
         return;
 
     if (byteop_strstr(txt[lin], "!= NULL") || byteop_strstr(txt[lin], "!=NULL")) {
-        printf("%s : ERROR : ", f_name);
-        printf("line %d : verification with NULL ", lin + UNU);
-        printf("can be eliminated. Keep only the expresion and the ");
-        printf("compiler will check if it's a non-null value.\n");
+        printf("\033[32m%s : ERROR : \033[0m", f_name);
+        printf("\033[32mline %d : verification with NULL \033[0m", lin + UNU);
+        printf("\033[32mcan be eliminated. Keep only the expresion and the \033[0m");
+        printf("\033[32mcompiler will check if it's a non-null value.\033[0m\n");
         (*error)++;
     }
 }
@@ -437,10 +437,10 @@ void equal_null(char const *f_name, char **txt, int nr_lines, int lin, int *erro
         return;
 
     if (byteop_strstr(txt[lin], "== NULL") || byteop_strstr(txt[lin], "==NULL")) {
-        printf("%s : ERROR : ", f_name);
-        printf("line %d : verification with NULL ", lin + UNU);
-        printf("can be eliminated. Keep only the expresion, with a '!' in front");
-        printf(", and the compiler will check if it's null.\n");
+        printf("\033[32m%s : ERROR : \033[0m", f_name);
+        printf("\033[32mline %d : verification with NULL ", lin + UNU);
+        printf("\033[32mcan be eliminated. Keep only the expresion, with a '!' in front\033[0m");
+        printf("\033[32m, and the compiler will check if it's null.\n\033[0m");
         (*error)++;
     }
 }
